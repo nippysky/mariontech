@@ -66,6 +66,65 @@ export default function ProductDetails({
     toast.success(`${product.name} added to cart successfully`);
   };
 
+  // Handle Variation Prices
+  const getVariationPrice = () => {
+    if (product.name === "RECHARGABLE BULBS" && variation === "7 WATTS") {
+      return 1500 * quantity;
+    } else if (
+      product.name === "RECHARGABLE BULBS" &&
+      variation === "10 WATTS"
+    ) {
+      return 1700 * quantity;
+    } else if (
+      product.name === "RECHARGABLE BULBS" &&
+      variation === "12 WATTS"
+    ) {
+      return 1800 * quantity;
+    } else if (
+      product.name === "RECHARGABLE BULBS" &&
+      variation === "15 WATTS"
+    ) {
+      return 1900 * quantity;
+    } else if (
+      product.name === "RECHARGABLE BULBS" &&
+      variation === "18 WATTS"
+    ) {
+      return 2000 * quantity;
+    } else if (
+      product.name === "RECHARGABLE BULBS" &&
+      variation === "20 WATTS"
+    ) {
+      return 2200 * quantity;
+    } else if (
+      product.name === "RECHARGABLE BULBS" &&
+      variation === "24 WATTS"
+    ) {
+      return 2800 * quantity;
+    } else if (
+      product.name === "USB RECHARGABLE BULBS" &&
+      variation === "12 WATTS"
+    ) {
+      return 2900 * quantity;
+    } else if (
+      product.name === "USB RECHARGABLE BULBS" &&
+      variation === "26 WATTS"
+    ) {
+      return 3400 * quantity;
+    } else if (
+      product.name === "USB RECHARGABLE BULBS" &&
+      variation === "45 WATTS"
+    ) {
+      return 3900 * quantity;
+    } else if (
+      product.name === "USB RECHARGABLE BULBS" &&
+      variation === "60 WATTS"
+    ) {
+      return 4500 * quantity;
+    } else {
+      return product.price * quantity;
+    }
+  };
+
   return (
     <>
       <Head>
@@ -134,7 +193,7 @@ export default function ProductDetails({
                 <div className="lg:w-1/2 w-full">
                   <small className="font-semibold text-gray-500">Price</small>
                   <h4 className="font-bold text-mainBlue text-2xl mt-3">
-                    ₦{product.price * quantity}
+                    ₦{getVariationPrice()}
                   </h4>
                 </div>
 
@@ -152,8 +211,6 @@ export default function ProductDetails({
                       onChange={(event) => setVariation(event.target.value)}
                       value={variation}
                       required
-                      id="reason"
-                      name="reason"
                       className="w-full h-14 bg-gray-200 border-none focus:ring-0 mt-3 rounded-lg"
                     >
                       <option value="" disabled selected hidden>
@@ -211,7 +268,11 @@ export default function ProductDetails({
             <Link
               target="_blank"
               rel="noopener noreferrer"
-              href={`https://api.whatsapp.com/send?phone=2349015103153&text=Hi%20*Marion.*%20I%20am%20interested%20in%20the%20*${product.name}*%20for%20*₦${product.price}*%20in%20your%20store.%20I%20need%20*${quantity}*%20of%20them.`}
+              href={`https://api.whatsapp.com/send?phone=2349015103153&text=Hi%20*Marion.*%20I%20am%20interested%20in*${quantity}*%20of%20the%20*${
+                product.name
+              }*%20*${
+                variation === "" ? "" : variation
+              }*%20for%20*₦${getVariationPrice()}*%20in%20your%20store.`}
             >
               <button className="w-full bg-[#25D366] text-center font-semibold text-white py-4 my-3 active:bg-mainYellow rounded-lg">
                 Buy From Whatsapp
@@ -294,6 +355,14 @@ export default function ProductDetails({
                 </a>
               </div>
             ))}
+          </div>
+
+          <div className="w-full flex justify-center items-center mt-20">
+            <Link href={"/shop"}>
+              <button className="font-semibold border bg-mainBlue text-white text-center text-clayBrown py-3 px-20 rounded-lg">
+                Load More
+              </button>
+            </Link>
           </div>
         </motion.section>
       </section>
