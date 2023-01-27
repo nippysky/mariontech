@@ -42,7 +42,7 @@ export default function BackToTheTop() {
           <button
             style={{
               cursor: "pointer",
-              background: "#131814",
+              background: "#1D37BF",
               padding: "0.5rem",
               borderRadius: "4px",
               border: 0,
