@@ -21,7 +21,6 @@ export default function Cart() {
   const dispatch = useDispatch();
 
   // Create An Array Of All Cart Item Names
-
   const cartItemNames = () => {
     let nameString: any[] = [];
     items.map((item: any) => nameString.push(item.name));

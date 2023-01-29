@@ -29,7 +29,7 @@ export default function Shop({ products }: { products: ProductsObject }) {
         <Navbar />
       </header>
 
-      <section className="w-full px-5 lg:px-32 py-10">
+      <section className="w-full px-5 lg:px-32 py-10 my-10">
         <ShopFeed products={products} />
       </section>
 

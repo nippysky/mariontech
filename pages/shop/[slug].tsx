@@ -125,6 +125,34 @@ export default function ProductDetails({
     }
   };
 
+  // Fucntion To Display Inline Video
+  const inlineVideo = () => {
+    if (product.name === "SOLAR LUXURY WALL LAMPS") {
+      return (
+        <video width="320" height="240" controls>
+          <source src="/brand/slwl.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else if (product.name === "SOLAR STREET LIGHT 1200W") {
+      return (
+        <video width="320" height="240" controls>
+          <source src="/brand/ssl1200.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else if (product.name === "SOLAR STREET LIGHT 400W") {
+      return (
+        <video width="320" height="240" controls>
+          <source src="/brand/ssl400.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <>
       <Head>
@@ -317,6 +345,8 @@ export default function ProductDetails({
               ))}
             </div>
           </div>
+
+          <div className="mt-5">{inlineVideo()}</div>
         </section>
 
         {/* MORE FROM COLLECTION */}

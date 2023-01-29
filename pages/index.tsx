@@ -1,7 +1,20 @@
 import Hero from "@/components/Hero";
+import SomeProducts from "@/components/SomeProducts";
+import client from "@/utils/client";
 import Head from "next/head";
 
-export default function Home() {
+type ProductsObject = {
+  _id: string;
+  name: string;
+  slug: string;
+  image: any;
+  price: number;
+  variation: string[];
+  description: any;
+  otherImages: any[];
+}[];
+
+export default function Home({ products }: { products: ProductsObject }) {
   return (
     <>
       <Head>
@@ -13,9 +26,41 @@ export default function Home() {
 
       <main className="w-full">
         <Hero />
+        <SomeProducts products={products} />
       </main>
 
       <footer></footer>
     </>
   );
+}
+
+export async function getStaticProps() {
+  type ProductsObject = {
+    _id: string;
+    name: string;
+    slug: string;
+    image: any;
+    price: number;
+    variation: string[];
+    description: any;
+    otherImages: any[];
+  }[];
+
+  const fecthProduct: ProductsObject = await client.fetch(
+    `*[_type == "products"]`
+  );
+  const products = fecthProduct.sort(() => Math.random() - 0.5);
+
+  if (!products) {
+    return {
+      notfound: true,
+    };
+  }
+
+  return {
+    props: {
+      products,
+    },
+    revalidate: 360,
+  };
 }
