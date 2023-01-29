@@ -5,21 +5,19 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { emptyCart, selectItems, selectTotal } from "@/redux/slices/cartSlice";
 import { useRouter } from "next/router";
-
-import { usePaystackPayment } from "react-paystack";
 import { toast } from "react-toastify";
 
 export default function Checkout() {
   const router = useRouter();
+
+  // Redux Dispatch
+  const dispatch = useDispatch();
 
   //   Store User Entry
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [address, setAddress] = useState<string>("");
-
-  // Redux Dispatch
-  const dispatch = useDispatch();
 
   const items: object[] = useSelector(selectItems);
   const total: number = useSelector(selectTotal);
@@ -29,41 +27,6 @@ export default function Checkout() {
     let nameString: any[] = [];
     items.map((item: any) => nameString.push(item.name));
     return nameString.toString();
-  };
-
-  const deliveryFee: number = 2500;
-  const finalTotal: number = total + deliveryFee;
-
-  // Handle Paystack Payment
-  const config = {
-    reference: new Date().getTime().toString(),
-    email: email,
-    name: name,
-    phone: phone,
-    address: address,
-    amount: finalTotal * 100,
-    publicKey: "pk_test_c2269f877802b324fdb3abc7554c34d137d13780",
-  };
-
-  const initializePayment = usePaystackPayment(config);
-
-  // HANDLE ON SUCCESS EVENT
-  // @ts-ignore
-  const onSuccess = (ref) => {
-    toast.success(
-      `You payment was of  ₦${finalTotal} : ${ref.reference} was successfull`
-    );
-
-    // redirect to profile page
-    router.replace("/order-successfull");
-
-    // empty cart items
-    dispatch(emptyCart());
-  };
-
-  // HANDLE CLOSE EVENT ON PAYSTACK MODAL
-  const onClose = () => {
-    toast.warn(`You dismissed the transaction.`);
   };
 
   // HANDLE BUTTON-PAY ONCLICK EVENT
@@ -90,6 +53,10 @@ export default function Checkout() {
       return;
     }
 
+    toast.info(
+      "Do not click again. Please be patient. We are processing your information"
+    );
+
     // Submit To API
     const orderDetails = {
       email,
@@ -106,10 +73,21 @@ export default function Checkout() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(orderDetails),
-    }).then((res) => res.json());
+    })
+      .then((res) => res.json())
+      .finally(() =>
+        toast.success(
+          "Order Made Successfully. You will be redirected to WhatsApp"
+        )
+      );
 
-    // @ts-ignore
-    initializePayment(onSuccess, onClose);
+    // redirect to profile page
+    router.replace(
+      `https://api.whatsapp.com/send?phone=2349015103153&text=Hi%2C%20*Marion.*%20My%20name%20is%20*${name}*%20%2C%20email%20is%3A%20*${email}*%20%2C%20and%20delievery%20address%20is%3A%20*${address}.*%20I%20have%20some%20products%20in%20your%20store%20that%20I%20am%20interested%20in.%20*${cartItemNames()}*%20for%20a%20total%20of%20*₦${total}*`
+    );
+
+    // empty cart
+    dispatch(emptyCart());
 
     setEmail("");
     setName("");
@@ -139,140 +117,159 @@ export default function Checkout() {
         </div>
 
         {/*USER FORM */}
-        <div className="w-full">
-          {/* email and name */}
-          <div className="w-full flex flex-col lg:flex-row gap-20 my-5">
-            <div className="mt-14 lg:w-1/2 w-full">
-              <label
-                className="font-semibold relative bottom-5 tracking-wide"
-                htmlFor="email"
-              >
-                Email Address
-              </label>
-              <input
-                onChange={(event) => setEmail(event.target.value)}
-                value={email}
-                required
-                className="w-full h-14 p-5 bg-blue-100 border-none focus:ring-0 rounded-lg"
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Enter Your Email Address"
-              />
+        {total > 0 && (
+          <div className="w-full">
+            {/* email and name */}
+            <div className="w-full flex flex-col lg:flex-row gap-20 my-5">
+              <div className="mt-14 lg:w-1/2 w-full">
+                <label
+                  className="font-semibold relative bottom-5 tracking-wide"
+                  htmlFor="email"
+                >
+                  Email Address
+                </label>
+                <input
+                  onChange={(event) => setEmail(event.target.value)}
+                  value={email}
+                  required
+                  className="w-full h-14 p-5 bg-blue-100 border-none focus:ring-0 rounded-lg"
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter Your Email Address"
+                />
+              </div>
+
+              <div className="lg:mt-14 mt-0 lg:w-1/2 w-full">
+                <label
+                  className="font-semibold relative bottom-5 tracking-wide"
+                  htmlFor="name"
+                >
+                  Full Name
+                </label>
+                <input
+                  onChange={(event) => setName(event.target.value)}
+                  value={name}
+                  required
+                  className="w-full h-14 p-5 bg-blue-100 border-none focus:ring-0 rounded-lg"
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Enter Your Full Name"
+                />
+              </div>
             </div>
 
-            <div className="lg:mt-14 mt-0 lg:w-1/2 w-full">
-              <label
-                className="font-semibold relative bottom-5 tracking-wide"
-                htmlFor="name"
-              >
-                Full Name
-              </label>
-              <input
-                onChange={(event) => setName(event.target.value)}
-                value={name}
-                required
-                className="w-full h-14 p-5 bg-blue-100 border-none focus:ring-0 rounded-lg"
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Enter Your Full Name"
-              />
+            {/* phone and address */}
+            <div className="w-full flex flex-col lg:flex-row gap-20 my-5">
+              <div className="mt-14 lg:w-1/2 w-full">
+                <label
+                  className="font-semibold relative bottom-5 tracking-wide"
+                  htmlFor="phone"
+                >
+                  Phone Number
+                </label>
+                <input
+                  onChange={(event) => setPhone(event.target.value)}
+                  value={phone}
+                  required
+                  className="w-full h-14 p-5 bg-blue-100 border-none focus:ring-0 rounded-lg"
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="Enter Your Phone Number"
+                />
+              </div>
+
+              <div className="lg:mt-14 mt-0 lg:w-1/2 w-full">
+                <label
+                  className="font-semibold relative bottom-5 tracking-wide"
+                  htmlFor="address"
+                >
+                  What Address Do we Waybill To?
+                </label>
+                <textarea
+                  onChange={(event) => setAddress(event.target.value)}
+                  value={address}
+                  required
+                  rows={3}
+                  placeholder="Enter Your Delivery Address"
+                  className="w-full p-5 bg-blue-100 border-none focus:ring-0 rounded-lg"
+                />
+              </div>
             </div>
           </div>
-
-          {/* phone and address */}
-          <div className="w-full flex flex-col lg:flex-row gap-20 my-5">
-            <div className="mt-14 lg:w-1/2 w-full">
-              <label
-                className="font-semibold relative bottom-5 tracking-wide"
-                htmlFor="phone"
-              >
-                Phone Number
-              </label>
-              <input
-                onChange={(event) => setPhone(event.target.value)}
-                value={phone}
-                required
-                className="w-full h-14 p-5 bg-blue-100 border-none focus:ring-0 rounded-lg"
-                type="tel"
-                id="phone"
-                name="phone"
-                placeholder="Enter Your Phone Number"
-              />
-            </div>
-
-            <div className="lg:mt-14 mt-0 lg:w-1/2 w-full">
-              <label
-                className="font-semibold relative bottom-5 tracking-wide"
-                htmlFor="address"
-              >
-                What Address Do we Waybill To?
-              </label>
-              <textarea
-                onChange={(event) => setAddress(event.target.value)}
-                value={address}
-                required
-                rows={3}
-                placeholder="Enter Your Delivery Address"
-                className="w-full p-5 bg-blue-100 border-none focus:ring-0 rounded-lg"
-              />
-            </div>
-          </div>
+        )}
+        {/* Note */}
+        <div className="flex justify-center my-10">
+          {total > 0 ? (
+            <small className="text-center">
+              After you have clicked the "Make Order" Button, Kindly be patient,
+              as you will be redirected to the Whatsapp page Of the vendor.
+            </small>
+          ) : (
+            <small className="text-center">
+              Your Cart is empty. Kindly shop for items.
+            </small>
+          )}
         </div>
 
         {/*  TOTAL CALCULATION BOX */}
-        <div className="my-10 bg-white border border-mainYellow rounded-lg py-5 px-10">
-          {/* total */}
-          <div className="flex items-center w-full mb-7">
-            <div className="flex justify-start w-1/2">
-              <p className="font-semibold tracking-widest text-gray-400">
-                TOTAL CART PRICE:
-              </p>
+        {total > 0 && (
+          <div className="my-10 bg-white border border-mainYellow rounded-lg py-5 px-10">
+            {/* total */}
+            <div className="flex items-center w-full mb-7">
+              <div className="flex justify-start w-1/2">
+                <p className="font-semibold tracking-widest text-gray-400">
+                  TOTAL CART PRICE:
+                </p>
+              </div>
+              <div className="flex justify-end w-1/2">
+                <p className="font-medium tracking-wide text-gray-400 text-right">
+                  ₦{total}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-end w-1/2">
-              <p className="font-medium tracking-wide text-gray-400 text-right">
-                ₦{total}
-              </p>
+
+            {/* delivery fee */}
+            <div className="flex items-center w-full mb-7">
+              <div className="flex justify-start w-1/2">
+                <p className="font-semibold tracking-widest text-gray-400">
+                  DELIVERY FEE:
+                </p>
+              </div>
+              <div className="flex justify-end w-1/2">
+                <p className="font-medium tracking-wide text-gray-400 text-right">
+                  Determined By Vendor
+                </p>
+              </div>
+            </div>
+
+            {/* final total */}
+            <div className="flex items-center w-full my-7">
+              <div className="flex justify-start w-1/2">
+                <p className="font-semibold tracking-widest text-gray-400">
+                  FINAL PAYMENT:
+                </p>
+              </div>
+              <div className="flex justify-end w-1/2">
+                <p className="font-semibold tracking-wide text-xl text-mainBlue text-right">
+                  ₦{total}
+                </p>
+              </div>
             </div>
           </div>
+        )}
 
-          {/* delivery fee */}
-          <div className="flex items-center w-full mb-7">
-            <div className="flex justify-start w-1/2">
-              <p className="font-semibold tracking-widest text-gray-400">
-                DELIVERY FEE:
-              </p>
-            </div>
-            <div className="flex justify-end w-1/2">
-              <p className="font-medium tracking-wide text-gray-400 text-right">
-                {total <= 0 ? ` ₦${0}` : ` ₦${deliveryFee}`}
-              </p>
-            </div>
-          </div>
-
-          {/* final total */}
-          <div className="flex items-center w-full my-7">
-            <div className="flex justify-start w-1/2">
-              <p className="font-semibold tracking-widest text-gray-400">
-                FINAL PAYMENT:
-              </p>
-            </div>
-            <div className="flex justify-end w-1/2">
-              <p className="font-semibold tracking-wide text-xl text-mainBlue text-right">
-                ₦{finalTotal}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* PAYMENT GATEWAY BUTTON */}
-        <button
-          className="w-full bg-mainBlue text-white font-medium tracking-wide py-3 rounded-lg"
-          type="submit"
-        >
-          PAY
-        </button>
+        {/*FINAL ORDER BUTTON */}
+        {total > 0 && (
+          <button
+            className="w-full bg-mainBlue text-white font-medium tracking-wide py-3 rounded-lg"
+            type="submit"
+          >
+            MAKE ORDER
+          </button>
+        )}
       </form>
     </>
   );

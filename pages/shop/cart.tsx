@@ -143,19 +143,9 @@ export default function Cart() {
               </p>
             </div>
 
-            <Link
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`https://api.whatsapp.com/send?phone=2349015103153&text=Hello%20*Marion.*%20I%20want%20to%20place%20an%20order%20for%20*${cartItemNames()}*`}
-            >
-              <button className="my-7 bg-[#25D366] text-center py-3 w-full text-white font-semibold rounded-lg">
-                Buy On WhatsApp
-              </button>
-            </Link>
-
             <Link href={`/shop/checkout`}>
               <button className=" bg-mainBlue text-center py-3 w-full text-white font-semibold rounded-lg">
-                Proceed To Pay
+                Proceed To Checkout
               </button>
             </Link>
           </section>
