@@ -20,11 +20,11 @@ export default function Hero() {
           interval={3000}
         >
           <div>
-            <img src="/brand/slide1.png" loading="lazy" alt="" />
+            <img src="/brand/slide1.png" loading="lazy" alt="Marion Slide 1" />
           </div>
 
           <div>
-            <img src="/brand/slide2.png" loading="lazy" alt="" />
+            <img src="/brand/Slide2.png" loading="lazy" alt="Marion Slide 2" />
           </div>
         </Carousel>
       </section>
