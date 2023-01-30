@@ -43,7 +43,7 @@ export default function SomeProducts({
       <div className="w-full px-5 lg:px-20">
         <Link href={"/shop"}>
           <button className="w-full rounded-lg my-7 bg-mainYellow text-white font-semibold py-3">
-            Checkout Our Shop
+            See More
           </button>
         </Link>
       </div>
