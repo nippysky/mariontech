@@ -296,11 +296,11 @@ export default function ProductDetails({
             <Link
               target="_blank"
               rel="noopener noreferrer"
-              href={`https://api.whatsapp.com/send?phone=2349015103153&text=Hi%20*Marion.*%20I%20am%20interested%20in*${quantity}*%20of%20the%20*${
+              href={`https://api.whatsapp.com/send?phone=2349015103153&text=Hi%20*Marion.*%20I%20am%20interested%20in%20*${quantity}*%20of%20the%20*${
                 product.name
-              }*%20*${
+              }*%20${
                 variation === "" ? "" : variation
-              }*%20for%20*₦${getVariationPrice()}*%20in%20your%20store.`}
+              }%20for%20*₦${getVariationPrice()}*%20in%20your%20store.`}
             >
               <button className="w-full bg-[#25D366] text-center font-semibold text-white py-4 my-3 active:bg-mainYellow rounded-lg">
                 Buy From Whatsapp

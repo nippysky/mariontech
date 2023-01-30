@@ -28,8 +28,6 @@ export default function Home({ products }: { products: ProductsObject }) {
         <Hero />
         <SomeProducts products={products} />
       </main>
-
-      <footer></footer>
     </>
   );
 }

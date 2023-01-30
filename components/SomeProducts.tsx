@@ -23,21 +23,30 @@ export default function SomeProducts({
 }) {
   return (
     <>
-      <section className="w-full flex flex-col lg:flex-row gap-10 justify-between px-5 lg:px-20 my-10">
-        <div className="w-full lg:w-1/2 flex justify-start">
-          <h1 className="text-2xl font-semibold capitalize tracking-wide text-black">
+      <section className="w-full flex gap-5 justify-between px-5 lg:px-20 my-10">
+        <div className="w-1/2 flex justify-start">
+          <h1 className="text-xl font-semibold capitalize tracking-wide text-black">
             Shop From Us
           </h1>
         </div>
 
-        <div className="w-full lg:w-1/2 justify-start lg:justify-end flex">
-          <Link href={"/shop"}>
-            <button className="w-full bg-mainYellow text-center font-semibold uppercase text-white tracking-wider py-3 px-5 hover:bg-mainBlue rounded-lg">
-              See More Products
+        <div className="w-1/2 justify-end flex items-center">
+          <Link href={"https://wa.link/7b120q"}>
+            <button className=" bg-[#25D366] text-center font-semibold uppercase text-white tracking-wider py-3 px-5 hover:bg-mainYellow rounded-lg">
+              WhatsApp
             </button>
           </Link>
         </div>
       </section>
+
+      {/* Checkout Our Shop */}
+      <div className="w-full px-5 lg:px-20">
+        <Link href={"/shop"}>
+          <button className="w-full rounded-lg my-7 bg-mainYellow text-white font-semibold py-3">
+            Checkout Our Shop
+          </button>
+        </Link>
+      </div>
 
       <section className="w-full px-5 lg:px-20 flex flex-col lg:flex-row gap-20 justify-between items-start mb-20">
         {/* List Some Products */}
